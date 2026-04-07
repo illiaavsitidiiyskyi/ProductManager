@@ -11,30 +11,27 @@ init_db()
 def index():
     if request.method == 'POST':
         name = request.form.get('name').lower()
-        price = request.form.get('price')
+        price = float(request.form.get('price'))
         category = request.form.get('category').lower()
 
-        for item in products:
-            if item.get('name') == name:
-                flash('Такий товар вже є!')
-                break
+        if product_exist(name):
+            flash('Такий товар вже існує')
         else:
-            info_product = {'name': name, 'price': price, 'category': category}
-            products.append(info_product)
+            add_product(name, price, category)
 
         return redirect(url_for('index'))
 
     # збираємо всі категорії
-    all_categories = map(lambda item: item['category'], products)
+    all_categories = get_all_categories()
 
     # фіксуємо обрану категорії
     choice_category = request.args.get('category', 'all')
 
     # фільтруємо список товарів
     if choice_category == 'all':
-        filter_products = products
+        filter_products = get_all_products()
     else:
-        filter_products = filter(lambda item: item['category'] == choice_category, products)
+        filter_products = get_product_by_category(choice_category)
 
     return render_template('index.html',
                            products=filter_products,
