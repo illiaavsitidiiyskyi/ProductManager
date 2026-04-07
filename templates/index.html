@@ -23,6 +23,26 @@
       <button type="submit">Додати</button>
   </form>
 
+  <!--
+  select - випадаючий список
+  option - пункт списку
+
+  value - значення, яке отримає сервер
+  selected - обраний пункт зі списку по замовчуванню
+  -->
+
+  <form method="GET">
+    <select name="category">
+      <option value="all" {% if choice_category=='all' %} selected {% endif %}>All</option>
+
+      {% for category in categories %}
+        <option value="{{ category }}" {% if choice_category==category %} selected {% endif %} >{{ category.title() }}</option>
+      {% endfor %}
+    </select>
+
+    <button type="submit">Застосувати</button>
+  </form>
+
   <h3>Товари:</h3>
 
   <table border="1px" cellpadding="5px">

@@ -2,14 +2,17 @@ from flask import Flask, render_template, request, redirect, url_for, flash
 
 app = Flask(__name__)
 app.secret_key = '123'
-products = []
+products = [
+    {'name': 'phone', 'price': 3000, 'category': 'device'},
+    {'name': 'notebook', 'price': 100, 'category': 'school'}
+]
 
 @app.route('/', methods=['GET', 'POST'])
 def index():
     if request.method == 'POST':
-        name = request.form.get('name')
+        name = request.form.get('name').lower()
         price = request.form.get('price')
-        category = request.form.get('category')
+        category = request.form.get('category').lower()
 
         for item in products:
             if item.get('name') == name:
@@ -21,15 +24,27 @@ def index():
 
         return redirect(url_for('index'))
 
-    return render_template('index.html', products=products)
+    # збираємо всі категорії
+    all_categories = map(lambda item: item['category'], products)
+
+    # фіксуємо обрану категорії
+    choice_category = request.args.get('category', 'all')
+
+    # фільтруємо список товарів
+    if choice_category == 'all':
+        filter_products = products
+    else:
+        filter_products = filter(lambda item: item['category'] == choice_category, products)
+
+    return render_template('index.html',
+                           products=filter_products,
+                           categories=all_categories,
+                           choice_category=choice_category)
 
 
-@app.route('/delete/<int:index>')
+@app.route('/delete/<index>')
 def delete(index):
-    product_name = products[index]['name']
-    products.pop(index)
-    flash(f'Товар {product_name} видалено!')
-    return redirect(url_for('index'))
+    print(index)
 
 
 app.run(debug=True)
