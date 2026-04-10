@@ -1,0 +1,156 @@
+/* Основні кольори */
+:root {
+    --primary-color: #07568a;
+    --primary-hover: #3274ac;
+
+    --danger-color: #e74c3c;
+    --danger-hover: #c0392b;
+
+    --bg-color: #f6f7f8;
+    --card-bg: #ffffff;
+
+    --text-color: #333;
+    --border-color: #eee;
+
+    --success-bg: #e6f7e6;
+}
+
+
+ /*===== HEADER ===== */
+.header {
+    padding: 10px 0;
+}
+
+.header .container {
+    background-color: var(--primary-color);
+    border-radius: 10px;
+    padding: 10px 20px;
+}
+
+.logo a {
+    display: flex;
+    align-items: center;
+    gap: 20px;
+
+    text-decoration: none;
+    color: white;
+}
+
+.logo img {
+    width: 30px;
+    height: 30px;
+}
+
+.logo span {
+    font-size: 20px;
+    font-weight: bold;
+}
+
+
+
+/* ===== БАЗА ===== */
+body {
+    font-family: Arial, sans-serif;
+    background-color: var(--bg-color);
+    color: var(--text-color);
+    margin: 0;
+    padding: 20px;
+}
+
+/* ===== КОНТЕЙНЕР ===== */
+.container {
+    max-width: 1200px;
+    margin: 0 auto;
+}
+
+
+/* ===== FLASH ===== */
+p {
+    background-color: var(--success-bg);
+    padding: 10px;
+    border-radius: 5px;
+}
+
+/* ===== ФОРМИ ===== */
+form {
+    background-color: var(--card-bg);
+    padding: 15px;
+    margin-bottom: 20px;
+    border-radius: 8px;
+}
+
+/* ===== INPUT ===== */
+input, select {
+    padding: 8px;
+    margin: 5px 5px 5px 0;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+}
+
+/* ===== КНОПКИ ===== */
+button {
+    padding: 8px 15px;
+    background-color: var(--primary-color);
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+button:hover {
+    background-color: var(--primary-hover);
+}
+
+
+/* ===== ТАБЛИЦЯ ===== */
+table {
+    width: 100%;
+    border-collapse: collapse;
+    background-color: var(--card-bg);
+    border-radius: 8px;
+    overflow: hidden;
+}
+
+thead {
+    background-color: var(--primary-color);
+    color: white;
+}
+
+td {
+    padding: 10px;
+    text-align: left;
+    border-bottom: 1px solid var(--border-color);
+}
+
+tbody tr:hover {
+    background-color: #f9f9f9;
+}
+
+table button {
+    background-color: var(--danger-color);
+}
+
+table button:hover {
+    background-color: var(--danger-hover);
+}
+
+
+/* ===== FLASH ===== */
+.flash {
+    padding: 10px;
+    border-radius: 5px;
+    margin-bottom: 10px;
+    transition: opacity 0.5s;
+}
+
+/* успіх */
+.flash.success {
+    background-color: #e6f7e6;
+    color: #2e7d32;
+}
+
+/* помилка */
+.flash.error {
+    background-color: #fdecea;
+    color: #c0392b;
+}

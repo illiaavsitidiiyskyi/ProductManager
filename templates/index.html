@@ -3,17 +3,39 @@
 <head>
   <meta charset="UTF-8">
   <title>ProductManager</title>
+    <!-- Підключаємо файл зі стилями-->
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
 </head>
 <body>
-  <h1>Product Manager</h1>
 
-  {% with messages = get_flashed_messages() %}
-    {% if messages %}
-      {% for message in messages %}
-        <p>{{ message }}</p>
-      {% endfor %}
-    {% endif %}
-  {% endwith %}
+
+    <!-- Шапка -->
+  <header class="header">
+      <div class="container">
+
+          <!--Логотип-->
+          <div class="logo">
+              <a href="/">
+                  <img src="{{ url_for('static', filename='images/shopping-cart.png') }}" alt="logo">
+                   <span>PRODUCT MANAGER</span>
+              </a>
+          </div>
+
+      </div>
+
+
+  </header>
+
+    <!-- основна частина -->
+    <main>
+        <div class="container">
+        {% with messages = get_flashed_messages(with_categories=true) %}
+            {% if messages %}
+            {% for category, message in messages %}
+              <p class="flash {{ category }}">{{ message }}</p>
+            {% endfor %}
+            {% endif %}
+        {% endwith %}
 
   <form method="POST">
       <input type="text" name="name" placeholder="Назва" required>
@@ -22,14 +44,6 @@
 
       <button type="submit">Додати</button>
   </form>
-
-  <!--
-  select - випадаючий список
-  option - пункт списку
-
-  value - значення, яке отримає сервер
-  selected - обраний пункт зі списку по замовчуванню
-  -->
 
   <form method="GET">
     <select name="category">
@@ -74,6 +88,16 @@
         {% endfor %}
       </tbody>
   </table>
+        </div>
+    </main>
+
+
+<!-- javascript для flash-->
+    <script>
+        setTimeout(() => {
+            document.querySelectorAll('.flash').forEach(el =>el.remove());
+        },3000);
+    </script>
 
 </body>
 </html>
