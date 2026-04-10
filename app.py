@@ -39,9 +39,9 @@ def index():
                            choice_category=choice_category)
 
 
-@app.route('/delete/<index>')
-def delete(index):
-    print(index)
-
+@app.route('/delete/<name>')
+def delete(name):
+    delete_product(name)
+    return redirect(url_for('index'))
 
 app.run(debug=True)
