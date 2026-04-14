@@ -1,10 +1,10 @@
 from flask import Flask, render_template, request, redirect, url_for, flash
 from models import init_db
 from action_db import *
+
 app = Flask(__name__)
 app.secret_key = '123'
 init_db()
-
 
 
 @app.route('/', methods=['GET', 'POST'])
@@ -15,9 +15,10 @@ def index():
         category = request.form.get('category').lower()
 
         if product_exist(name):
-            flash('Такий товар вже існує')
+            flash('Такий товар вже є!')
         else:
             add_product(name, price, category)
+            flash('Товар додано!')
 
         return redirect(url_for('index'))
 
@@ -39,9 +40,14 @@ def index():
                            choice_category=choice_category)
 
 
-@app.route('/delete/<name>')
-def delete(name):
-    delete_product(name)
-    return redirect(url_for('index'))
+@app.route('/delete/<index>')
+def delete(index):
+    print(index)
+
 
 app.run(debug=True)
+# @app.route('/delete/<name>')
+# def delete(name):
+#     delete_product(name)
+#     return redirect(url_for('index'))
+
