@@ -1,6 +1,5 @@
 from flask import Flask, render_template, request, redirect, url_for, flash, session
 from werkzeug.security import generate_password_hash, check_password_hash
-import re
 
 from models import init_db
 from action_db import *
@@ -12,18 +11,6 @@ init_db()
 
 def is_logged():
     return 'company_name' in session
-
-
-def validate_password(password):
-    if len(password) < 6:
-        return False
-    if not re.search(r'[A-Za-z]', password):
-        return False
-    if not re.search(r'\d', password):
-        return False
-    if not re.search(r'[!@#$%^&*(),.?":{}|<>]', password):
-        return False
-    return True
 
 
 @app.route('/', methods=['GET', 'POST'])
@@ -73,18 +60,11 @@ def register():
         name_company = request.form.get('name_company').lower()
         password = request.form.get('password')
 
-        if not name_company or name_company.strip() == '':
-            flash('Логін не може бути порожнім!')
-            return redirect(url_for('register'))
-
-        if not validate_password(password):
-            flash('Пароль повинен бути не коротшим за 6 символів та містити хоча б одну літеру, цифру та спеціальний знак!')
-            return redirect(url_for('register'))
-
         if company_exists(name_company):
             flash('Така компанія вже є!')
             return redirect(url_for('register'))
         else:
+            # отримуємо хеш паролю
             password_hash = generate_password_hash(password)
 
             flash(f'Компанія {name_company} зареєстрована!')
@@ -110,19 +90,13 @@ def login():
             flash(f'Пароль НЕкоректний')
             return redirect(url_for('login'))
 
+        # зберігаємо в cookie файл запис про назву компанії
         session['company_name'] = company.name
 
         flash(f'Вітаємо, {company.name}!')
         return redirect(url_for('index'))
 
     return render_template('login.html')
-
-
-@app.route('/logout')
-def logout():
-    session.pop('company_name', None)
-    flash('Ви вийшли з системи')
-    return redirect(url_for('login'))
 
 
 app.run(debug=True)
