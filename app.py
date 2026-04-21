@@ -1,4 +1,7 @@
-from flask import Flask, render_template, request, redirect, url_for, flash
+from flask import Flask, render_template, request, redirect, url_for, flash, session
+from werkzeug.security import generate_password_hash, check_password_hash
+import re
+
 from models import init_db
 from action_db import *
 
@@ -7,8 +10,27 @@ app.secret_key = '123'
 init_db()
 
 
+def is_logged():
+    return 'company_name' in session
+
+
+def validate_password(password):
+    if len(password) < 6:
+        return False
+    if not re.search(r'[A-Za-z]', password):
+        return False
+    if not re.search(r'\d', password):
+        return False
+    if not re.search(r'[!@#$%^&*(),.?":{}|<>]', password):
+        return False
+    return True
+
+
 @app.route('/', methods=['GET', 'POST'])
 def index():
+    if not is_logged():
+        return redirect(url_for('login'))
+
     if request.method == 'POST':
         name = request.form.get('name').lower()
         price = float(request.form.get('price'))
@@ -45,9 +67,62 @@ def delete(index):
     print(index)
 
 
-app.run(debug=True)
-# @app.route('/delete/<name>')
-# def delete(name):
-#     delete_product(name)
-#     return redirect(url_for('index'))
+@app.route('/register', methods=['GET', 'POST'])
+def register():
+    if request.method == 'POST':
+        name_company = request.form.get('name_company').lower()
+        password = request.form.get('password')
 
+        if not name_company or name_company.strip() == '':
+            flash('Логін не може бути порожнім!')
+            return redirect(url_for('register'))
+
+        if not validate_password(password):
+            flash('Пароль повинен бути не коротшим за 6 символів та містити хоча б одну літеру, цифру та спеціальний знак!')
+            return redirect(url_for('register'))
+
+        if company_exists(name_company):
+            flash('Така компанія вже є!')
+            return redirect(url_for('register'))
+        else:
+            password_hash = generate_password_hash(password)
+
+            flash(f'Компанія {name_company} зареєстрована!')
+            add_company(name_company, password_hash)
+
+            return redirect(url_for('login'))
+
+    return render_template('register.html')
+
+
+@app.route('/login', methods=['GET', 'POST'])
+def login():
+    if request.method == 'POST':
+        name_company = request.form.get('name_company').lower()
+        password = request.form.get('password')
+
+        if not company_exists(name_company):
+            flash(f'Компанія {name_company} НЕ ІСНУЄ!')
+            return redirect(url_for('login'))
+
+        company = get_company_by_name(name_company)
+        if not check_password_hash(company.password, password):
+            flash(f'Пароль НЕкоректний')
+            return redirect(url_for('login'))
+
+        session['company_name'] = company.name
+
+        flash(f'Вітаємо, {company.name}!')
+        return redirect(url_for('index'))
+
+    return render_template('login.html')
+
+
+@app.route('/logout')
+def logout():
+    session.pop('company_name', None)
+    flash('Ви вийшли з системи')
+    return redirect(url_for('login'))
+
+
+app.run(debug=True)

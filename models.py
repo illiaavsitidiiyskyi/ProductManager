@@ -14,8 +14,12 @@ class Product(BaseModel):
     category = TextField()
 
 
+class Company(BaseModel):
+    name = TextField()
+    password = TextField()
+
+
 def init_db():
     db.connect()
-    db.create_tables([Product])
-
-db.close()
+    # db.drop_tables([Company])
+    db.create_tables([Product, Company])
