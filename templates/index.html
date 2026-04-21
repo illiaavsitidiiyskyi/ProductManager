@@ -3,10 +3,9 @@
 {% block title %}
 Product Manager
 {% endblock %}
-<body>
 
 {% block content %}
-<div class="container">
+  <div class="container">
     <h4 class="mb-3">Add product:</h4>
 
     <form method="POST" class="row mb-4">
@@ -67,7 +66,7 @@ Product Manager
               <td>
 
                 <!-- loop.index - повертає порядковий номер ітерації (повторення) -->
-                <a href="{{ url_for('delete', index=loop.index0) }}">
+                <a href="{{ url_for('delete', name=item['name']) }}">
                   <button type="submit" class="btn btn-danger ">Видалити</button>
                 </a>
 
@@ -77,7 +76,4 @@ Product Manager
         </tbody>
     </table>
   </div>
-</body>
-
-</div>
 {% endblock %}
