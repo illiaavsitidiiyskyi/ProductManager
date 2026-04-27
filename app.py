@@ -71,6 +71,30 @@ def delete(name):
     return redirect(url_for('index'))
 
 
+@app.route('/edit/<name>', methods=['GET', 'POST'])
+def edit(name):
+    if not is_logged():
+        return redirect(url_for('login'))
+
+    company = current_company()
+
+    if request.method == 'POST':
+        price = float(request.form.get('price'))
+        category = request.form.get('category').lower()
+
+        update_product(name, price, category, company.id)
+        flash('Товар оновлено!')
+        return redirect(url_for('index'))
+
+    product = get_product_by_name(name, company.id)
+
+    if not product:
+        flash('Товар не знайдено!')
+        return redirect(url_for('index'))
+
+    return render_template('edit.html', product=product)
+
+
 @app.route('/register', methods=['GET', 'POST'])
 def register():
     if request.method == 'POST':

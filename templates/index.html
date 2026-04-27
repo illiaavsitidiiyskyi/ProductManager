@@ -64,13 +64,14 @@ Product Manager
               <td>{{ item['price'] }}</td>
               <td>{{ item['category'] }}</td>
               <td>
+  <a href="{{ url_for('delete', name=item['name']) }}">
+    <button type="submit" class="btn btn-danger">Видалити</button>
+  </a>
 
-                <!-- loop.index - повертає порядковий номер ітерації (повторення) -->
-                <a href="{{ url_for('delete', name=item['name']) }}">
-                  <button type="submit" class="btn btn-danger ">Видалити</button>
-                </a>
-
-              </td>
+  <a href="{{ url_for('edit', name=item['name']) }}">
+    <button type="button" class="btn btn-warning">Редагувати</button>
+  </a>
+</td>
             </tr>
           {% endfor %}
         </tbody>
