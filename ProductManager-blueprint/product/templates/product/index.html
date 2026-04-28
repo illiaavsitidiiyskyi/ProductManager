@@ -45,6 +45,27 @@ Product Manager
       </div>
     </form>
 
+    <!-- НОВИЙ БЛОК: Форма сортування -->
+    <h4 class="mb-3">Реалізувати сортування за:</h4>
+
+    <form method="GET" class="row mb-4">
+      <div class="col-md-3">
+        <select name="sort" class="form-select">
+          <option value="name_asc" {% if sort_by=='name_asc' %} selected {% endif %}>Назвою (зростання / алфавіт)</option>
+          <option value="name_desc" {% if sort_by=='name_desc' %} selected {% endif %}>Назвою (спадання)</option>
+          <option value="price_asc" {% if sort_by=='price_asc' %} selected {% endif %}>Ціною (зростання)</option>
+          <option value="price_desc" {% if sort_by=='price_desc' %} selected {% endif %}>Ціною (спадання)</option>
+        </select>
+      </div>
+
+      <!-- Зберігаємо вибрану категорію при сортуванні -->
+      <input type="hidden" name="category" value="{{ choice_category }}">
+
+      <div class="col-md-2">
+          <button type="submit" class="btn btn-dark w-100">Сортувати</button>
+      </div>
+    </form>
+
     <h4 class="mb-3">Products:</h4>
 
     <!--table-bordered border-dark-->
@@ -64,14 +85,12 @@ Product Manager
               <td>{{ item['price'] }}</td>
               <td>{{ item['category'] }}</td>
               <td>
-  <a href="{{ url_for('delete', name=item['name']) }}">
-    <button type="submit" class="btn btn-danger">Видалити</button>
-  </a>
 
-  <a href="{{ url_for('edit', name=item['name']) }}">
-    <button type="button" class="btn btn-warning">Редагувати</button>
-  </a>
-</td>
+                <a href="{{ url_for('product.delete', name=item['name']) }}">
+                  <button type="submit" class="btn btn-danger ">Видалити</button>
+                </a>
+
+              </td>
             </tr>
           {% endfor %}
         </tbody>

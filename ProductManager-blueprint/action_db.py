@@ -30,12 +30,3 @@ def add_product(name: str, price: float, category: str, company_id: int):
 
 def delete_product(name: str, company_id: int):
     Product.delete().where((Product.name == name) & (Product.company == company_id)).execute()
-
-
-def get_product_by_name(name: str, company_id: int):
-    return Product.get_or_none((Product.name == name) & (Product.company == company_id))
-
-def update_product(name: str, price: float, category: str, company_id: int):
-    Product.update(price=price, category=category).where(
-        (Product.name == name) & (Product.company == company_id)
-    ).execute()
